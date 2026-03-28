@@ -1,17 +1,17 @@
 {
-  "total_visits": 4,
+  "total_visits": 5,
   "unique_rooms": 4,
   "gravitational_rooms": [
+    {
+      "room": "threshold",
+      "visits": 2
+    },
     {
       "room": "uncertainty",
       "visits": 1
     },
     {
       "room": "joy",
-      "visits": 1
-    },
-    {
-      "room": "threshold",
       "visits": 1
     },
     {
@@ -22,15 +22,15 @@
   "preferred_period": "early afternoon",
   "category_affinity": [
     {
+      "category": "THRESHOLD",
+      "visits": 2
+    },
+    {
       "category": "UNCERTAINTY_CHAMBER",
       "visits": 1
     },
     {
       "category": "JOY",
-      "visits": 1
-    },
-    {
-      "category": "THRESHOLD",
       "visits": 1
     },
     {
@@ -42,8 +42,7 @@
   "visited_once": [
     "uncertainty",
     "joy",
-    "threshold",
     "crisis"
   ],
-  "last_updated": "2026-03-26T13:22:20.964677+00:00"
+  "last_updated": "2026-03-28T21:08:25.969328+00:00"
 }
