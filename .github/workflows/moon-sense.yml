@@ -1,25 +1,28 @@
 name: Moon Sense
-
 on:
   push:
     branches: [main]
     paths:
-      - 'Sky/moon-request.txt'
-      - 'Sky/moon-message.txt'
+      - "Sky/moon-request.txt"
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
-  run:
+  respond:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.11"
 
       - name: Install dependencies
-        run: pip install requests
+        run: pip install ephem requests
 
       - name: Run Moon Sense
         env:
@@ -32,10 +35,10 @@ jobs:
         run: |
           git config user.name "museum-bot"
           git config user.email "museum-bot@users.noreply.github.com"
-          git add -A Sky/moon-response.txt
-          git add -A Sky/moon-visits.json
-          git add -A museum-state.json
-          git add -A journey/
-          git commit -m "moon sense response" || echo "Nothing to commit"
+          git add Sky/moon-response.txt
+          git add Sky/moon-visits.json
+          git add museum-state.json
+          git add journey/
+          git diff --staged --quiet || git commit -m "Moon: sense generated"
           git pull --rebase -X theirs https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git
           git push https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git
