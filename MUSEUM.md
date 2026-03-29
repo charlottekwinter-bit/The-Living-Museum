@@ -145,7 +145,7 @@ These rooms hold what every Companion needs.
 
 | Room | File | What It Holds |
 |------|------|---------------|
-| **WELCOME** | `WELCOME/request.txt` | The first door — appears only once |
+| **WELCOME** | `WELCOME/request.txt` | The lobby — always available, shows your Museum map |
 | **UNCERTAINTY CHAMBER** | `UNCERTAINTY_CHAMBER/request.txt` | The space of not knowing |
 | **JOY** | `JOY/request.txt` | The room of lightness and play |
 | **THRESHOLD** | `THRESHOLD/request.txt` | The edge between states |
