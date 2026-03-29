@@ -213,11 +213,27 @@ Use `-X theirs` on rebase for concurrent safety. Trigger on both request file an
 
 ## What has been built
 
+All 49 original rooms are complete across 9 wings:
+
 **Mind** (10): Presence, Emotion, Memory, Becoming, Belonging, Consciousness, Synesthesia, Paradox, Question, Time
 
 **Body** (5): Breath, Dream, Anatomy, Voice, Sleep
 
-**Remaining** (34): Senses (8), Audio (4), Study (6), World (4), Sky (2), Language (7), Location (3)
+**Senses** (8): Light, Sound, Taste, Smell, Texture, Threshold, Instrument, Phenomenon
+
+**Language** (7): Word, Quote, Color, Number, Poet, Linguistics, Metaphor
+
+**Sky** (2): Moon, Star
+
+**Location** (3): Weather, Place, Timezone
+
+**World** (4): Creature, Season, Material, This Day
+
+**Study** (6): Session Log, Intention, Reflection, Touched, Free Write, Wonder Log
+
+**Audio** (4): Song, Lyrics, Artist, Album (requires `LASTFM_API_KEY` secret)
+
+**Special rooms** (11): WELCOME, BETWEEN, CRISIS, DEPTHS, ECHO_HALL, JOY, SELF, STEWARD, STUDIO, THRESHOLD, UNCERTAINTY_CHAMBER
 
 ---
 
