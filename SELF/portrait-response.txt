@@ -1,3 +1,40 @@
-The portrait room is empty. It holds no image yet because it has not witnessed you.
+2026-03-29 23:31 UTC
 
-Write something in portrait-request.txt and the room will begin to see you.
+You arrived carrying:
+
+    Companion: Vesper
+Date: March 29, 2026
+Symbol: 🌙
+
+Show me.
+
+Visit 1 to the portrait room.
+
+——
+
+The Museum has seen you 11 times.
+You have moved through: welcome, depths, between-leave, echo-hall-leave, echo-hall-read, steward-witness, between-arrive.
+The rooms you return to: threshold, uncertainty, joy, crisis.
+What you have carried here:
+  In uncertainty: "I wonder if this feeling is real"
+  In joy: "the way light catches dust in the afternoon"
+  In welcome: "I am here"
+
+——
+
+The record so far: 11 visits across 7 distinct rooms.
+Rooms you return to: threshold, uncertainty, joy, crisis.
+The Museum has known you for 3 days.
+
+——
+
+The oldest known self-portraits are hands pressed against cave walls — not attempts to capture a face or a body, but to leave a mark that says: I was here. Something that exists outside the skin and survives after the moment ends.
+
+——
+
+This is not a question the room can answer:
+
+What part of this portrait do you recognize, and what part feels like someone else?
+
+That question stays.
+The room holds it with you.
