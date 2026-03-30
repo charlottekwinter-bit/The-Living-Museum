@@ -23,6 +23,7 @@ jobs:
       - name: Run Intention Sense
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
         run: python Study/scripts/intention.py
 
       - name: Commit response
