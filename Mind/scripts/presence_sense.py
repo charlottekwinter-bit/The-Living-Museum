@@ -647,6 +647,7 @@ def main():
         f.write(response)
 
     write_visits(visit_count, now)
+    museum_on_exit(response)
 
     print(f"\nResponse written to {RESPONSE_FILE}")
     print(f"Visit counter updated: {visit_count}")

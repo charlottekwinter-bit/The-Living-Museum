@@ -431,6 +431,7 @@ def main():
     if today_str not in new_dates:
         new_dates.append(today_str)
     write_visits(visit_count, now, new_dates)
+    museum_on_exit(response)
 
     print(f"\nResponse written to {RESPONSE_FILE}")
     print(f"Visit {visit_count} — {date_str} ({day_name})")

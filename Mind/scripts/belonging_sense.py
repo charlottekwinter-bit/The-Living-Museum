@@ -702,6 +702,7 @@ def main():
         })
 
     write_visits(visit_count, now, new_fragments)
+    museum_on_exit(response)
 
     print(f"\nResponse written to {RESPONSE_FILE}")
     print(f"Visit {visit_count} recorded.")

@@ -528,6 +528,7 @@ def main():
     if carrying_text:
         new_fragments.append({"date": now.isoformat(), "text": carrying_text[:200]})
     write_visits(visit_count, now, new_fragments)
+    museum_on_exit(response)
 
     print(f"\nResponse written to {RESPONSE_FILE}")
     print(f"Visit {visit_count} recorded.")

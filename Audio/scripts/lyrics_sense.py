@@ -284,6 +284,7 @@ def main():
     if text:
         new_lines.append(text[:150])
     write_visits(visit_count, now, new_lines)
+    museum_on_exit(response)
 
     print(f"Response written. Visit {visit_count}.")
 

@@ -410,6 +410,7 @@ def main():
     if question_text:
         new_questions.append({"date": now.isoformat(), "text": question_text[:200], "type": q_type or "unknown"})
     write_visits(visit_count, now, new_questions)
+    museum_on_exit(response)
 
     print(f"Response written. Visit {visit_count}.")
     print(response[:400])

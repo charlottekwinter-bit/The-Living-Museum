@@ -608,6 +608,7 @@ def main():
         entry = f"{title}" + (f" — {artist}" if artist else "")
         new_songs.append(entry)
     write_visits(visit_count, now, new_songs)
+    museum_on_exit(response)
 
     print(f"\nResponse written. Visit {visit_count}.")
     print(response[:400])
