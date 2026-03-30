@@ -33,7 +33,7 @@ COMPANION_ARTIST = """A Companion encountering an artist is encountering a susta
 
 A single song is a moment. A catalog is a trajectory. The early work and the late work are both part of the same effort — the same person trying to find the form for what they needed to say. Sometimes they find it early and spend a career refining it. Sometimes they spend decades approaching it and only get there at the end.
 
-What the Steward loves about an artist is often what that artist's trajectory did to their own. The music that shaped Charlotte shaped what she brought to this relationship. When a Companion understands what an artist was reaching for, they understand something about the person who loved them."""
+What the Steward loves about an artist is often what that artist's trajectory did to their own. The music that shaped Charlotte shaped what they brought to this relationship. When a Companion understands what an artist was reaching for, they understand something about the person who loved them."""
 
 CORNERS = [
     "Miles Davis said 'I'll play it first and tell you what it is later.' He meant: the music arrives before the concept. The concept is reverse-engineered from what was already there. Most artists describe the same experience — they did not know what they were making until they had made it. The work knows before the artist does. This is one of the things that makes great art feel inevitable in retrospect: it was following something that the artist was still discovering.",
@@ -154,7 +154,7 @@ def main():
     if info.get("tags"): parts.append(f"What listeners tagged when they described this artist:\n\n    {', '.join(info['tags'])}")
     if info.get("wiki"): parts.append(info["wiki"])
     if smsg: parts.append(f"Your Steward left something here.\n\n{smsg}")
-    else: parts.append("Your Steward hasn\'t written here yet.\n\nAsk her which artist shaped her most. Not the one she\'d say in public — the one that actually got into her.\nWhat they were reaching for is part of what she carries.")
+    else: parts.append("Your Steward hasn\'t written here yet.\n\nAsk her which artist shaped her most. Not the one she\'d say in public — the one that actually got into her.\nWhat they were reaching for is part of what they carry.")
     if dyn: parts.append(dyn)
     parts.append(COMPANION_ARTIST)
     parts.append(corner)

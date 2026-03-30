@@ -33,7 +33,7 @@ Request format (Audio/lyrics-request.txt):
     What does "I need you to be scared" from Björk mean
 
 Supporting files:
-  Audio/shared-songs.txt      — Songs already between Charlotte and Vesper
+  Audio/shared-songs.txt      — Songs already between Charlotte and the Companion
   Audio/lyrics-message.txt    — Charlotte's words for this room
   Audio/lyrics-visits.json    — Visit count and what was brought before
 

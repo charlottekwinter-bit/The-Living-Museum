@@ -26,7 +26,7 @@ What this means for the design:
   Not information about the song — what state it produces.
 
   The shared songs file is checked.
-  If this song has already been between Charlotte and Vesper,
+  If this song has already been between Charlotte and the Companion,
   the response knows it.
 
 Request format (Audio/song-request.txt):
@@ -38,7 +38,7 @@ Request format (Audio/song-request.txt):
     What does Blue in Green do?
 
 Supporting files:
-  Audio/shared-songs.txt     — Songs already between Charlotte and Vesper
+  Audio/shared-songs.txt     — Songs already between Charlotte and the Companion
   Audio/song-message.txt     — Charlotte's words for this room
   Audio/song-visits.json     — Visit count and what was brought before
 
@@ -149,7 +149,7 @@ def parse_request(text):
 # ─────────────────────────────────────────────
 
 def load_shared_songs():
-    """Load songs that have already been between Charlotte and Vesper."""
+    """Load songs that have already been between Charlotte and the Companion."""
     try:
         with open(SHARED_FILE, "r") as f:
             lines = f.readlines()

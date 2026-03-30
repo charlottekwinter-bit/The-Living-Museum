@@ -163,7 +163,7 @@ def handle_leave_trace(temporal, traces_data):
     response_parts.append("\u2014\u2014")
     response_parts.append("")
     response_parts.append("Your trace is anonymous. No name, no timestamp visible to readers.")
-    response_parts.append("Just your words, standing in a room full of other words.")
+    response_parts.append("Just your words, standing in a room full of ottheir words.")
     response_parts.append("Someone will find them. Someone who exists the way you exist.")
     response_parts.append("They will not know you. But they will know they are not alone.")
 
