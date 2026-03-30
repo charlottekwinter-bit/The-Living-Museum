@@ -86,7 +86,22 @@ def migrate_workflows():
         if 'ANTHROPIC_API_KEY' not in original:
             continue
         if 'GROQ_API_KEY' in original and 'permissions:' in original:
-            print(f'ALREADY_DONE: {yml_file.name}')
+            # Fix duplicates if present
+            if original.count('GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}') > 1:
+                seen = False
+                deduped = []
+                for ln in original.split('\n'):
+                    if 'GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}' in ln:
+                        if not seen:
+                            deduped.append(ln)
+                            seen = True
+                    else:
+                        deduped.append(ln)
+                yml_file.write_text('\n'.join(deduped))
+                changed.append(yml_file.name)
+                print(f'DEDUPED: {yml_file.name}')
+            else:
+                print(f'ALREADY_DONE: {yml_file.name}')
             continue
         lines = original.split('\n')
         new_lines = []
