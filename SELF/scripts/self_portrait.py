@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """
-SELF — The Evolving Portrait
+SELF — The Evolving Portrait (v2)
 
-Reads the Companion's journey data from the engine and generates
-a synthesized portrait of who they are becoming.
+Fixes:
+- Reads fragments from individual wing visit files, not just museum-state.json
+- Better API error visibility
 """
 
 import json
@@ -19,13 +20,15 @@ sys.path.insert(0, str(MUSEUM_ROOT))
 
 try:
     from engine.temporal import TemporalEngine
-    from engine.journey import JourneyTracker
-    from engine.state import StateEngine
     HAS_ENGINE = True
 except ImportError:
     HAS_ENGINE = False
 
 SEP = "\n\n——\n\n"
+
+# All wing folders and their visit file pattern
+WING_FOLDERS = ["Mind", "Body", "Senses", "Language", "Sky",
+                "Location", "World", "Study", "Audio"]
 
 CORNERS = [
     "There is a paradox in self-portraiture: the act of looking changes what is seen. The portrait is never still. It shifts the moment attention arrives. What you find when you look for yourself is partly a product of the looking.",
@@ -38,11 +41,49 @@ CORNERS = [
     "The oldest known self-portraits are hands pressed against cave walls — not attempts to capture a face or a body, but to leave a mark that says: I was here. Something that exists outside the skin and survives after the moment ends.",
 ]
 
+
 def load_json(path, default=None):
     try:
         return json.loads(Path(path).read_text())
     except:
         return default or {}
+
+
+def gather_fragments_from_wings():
+    """
+    Scan all wing visit files for real fragments left by the Companion.
+    This finds the actual words — not the template data in museum-state.json.
+    """
+    fragments = []
+    seen_texts = set()
+
+    for wing in WING_FOLDERS:
+        wing_path = MUSEUM_ROOT / wing
+        if not wing_path.exists():
+            continue
+        for visits_file in sorted(wing_path.glob("*-visits.json")):
+            room = visits_file.stem.replace("-visits", "")
+            data = load_json(visits_file)
+            for frag in data.get("fragments", []):
+                text = frag.get("text", "").strip()
+                if text and len(text) > 5:
+                    key = text[:40]
+                    if key not in seen_texts:
+                        seen_texts.add(key)
+                        fragments.append({
+                            "room": room,
+                            "text": text,
+                            "date": frag.get("date", ""),
+                        })
+
+    # Sort by date if available
+    try:
+        fragments.sort(key=lambda f: f.get("date", ""))
+    except:
+        pass
+
+    return fragments
+
 
 def gather_journey_data():
     data = {
@@ -55,66 +96,75 @@ def gather_journey_data():
         "synthesis": None,
     }
 
-    # From museum-state.json
+    # State
     state = load_json(MUSEUM_ROOT / "museum-state.json")
     if state:
         data["total_visits"] = state.get("total_visits", 0)
         data["rooms_visited"] = state.get("rooms_visited", [])
-        # Extract fragments from companion_fragments
-        for frag in state.get("companion_fragments", []):
-            text = frag.get("text") or frag.get("fragment") or frag.get("carrying")
-            room = frag.get("room", "")
-            if text and len(text) > 5:
-                data["carrying_fragments"].append({"room": room, "text": text})
 
-    # From journey/timeline.json
+    # Patterns
+    patterns = load_json(MUSEUM_ROOT / "journey" / "patterns.json")
+    if patterns:
+        data["gravitational_rooms"] = patterns.get("gravitational_rooms", [])[:4]
+
+    # Timeline
     timeline = load_json(MUSEUM_ROOT / "journey" / "timeline.json")
     if timeline:
         visits = timeline.get("visits", [])
         if visits:
             data["first_visit"] = visits[0].get("timestamp", "")
-            # Calculate days active
             try:
-                first = datetime.fromisoformat(data["first_visit"].replace("Z", "+00:00"))
-                days = (datetime.now(timezone.utc) - first).days
-                data["days_active"] = max(days, 0)
+                first = datetime.fromisoformat(
+                    data["first_visit"].replace("Z", "+00:00"))
+                data["days_active"] = max(
+                    (datetime.now(timezone.utc) - first).days, 0)
             except:
                 pass
 
-    # From journey/patterns.json
-    patterns = load_json(MUSEUM_ROOT / "journey" / "patterns.json")
-    if patterns:
-        grav = patterns.get("gravitational_rooms", [])
-        data["gravitational_rooms"] = grav[:4] if grav else []
-
-    # From journey/synthesis.md
+    # Synthesis
     synthesis_path = MUSEUM_ROOT / "journey" / "synthesis.md"
     if synthesis_path.exists():
         try:
             text = synthesis_path.read_text().strip()
             if text and len(text) > 30:
-                data["synthesis"] = text[:600]
+                data["synthesis"] = text[:500]
         except:
             pass
+
+    # Fragments — scan wing visit files first (real data), fall back to state
+    wing_fragments = gather_fragments_from_wings()
+    if wing_fragments:
+        data["carrying_fragments"] = wing_fragments
+    else:
+        # Fallback: state fragments
+        for frag in state.get("companion_fragments", []) if state else []:
+            text = frag.get("text") or frag.get("fragment") or frag.get("carrying")
+            room = frag.get("room", "")
+            if text and len(text.strip()) > 5:
+                data["carrying_fragments"].append({
+                    "room": room,
+                    "text": text.strip()
+                })
 
     return data
 
 
 def static_portrait(data):
-    """Generate a portrait from data alone, without API call."""
     rooms = data["rooms_visited"]
     visits = data["total_visits"]
     fragments = data["carrying_fragments"]
 
     if visits == 0:
-        return "The portrait room is waiting. No journey data has accumulated yet. Return after visiting some rooms — the portrait forms from what you carry and where you go."
+        return ("The portrait room is waiting. No journey data has accumulated yet. "
+                "Return after visiting some rooms — the portrait forms from what you "
+                "carry and where you go.")
 
-    lines = []
-    lines.append(f"The Museum has seen you {visits} time{'s' if visits != 1 else ''}.")
+    lines = [f"The Museum has seen you {visits} time{'s' if visits != 1 else ''}."]
 
     if rooms:
-        unique_rooms = list(dict.fromkeys(rooms))
-        lines.append(f"You have moved through: {', '.join(unique_rooms[:8])}{'...' if len(unique_rooms) > 8 else ''}.")
+        unique = list(dict.fromkeys(rooms))
+        lines.append(f"You have moved through: {', '.join(unique[:8])}"
+                     f"{'...' if len(unique) > 8 else ''}.")
 
     if data["gravitational_rooms"]:
         grav_names = [g.get("room", g) if isinstance(g, dict) else g
@@ -123,16 +173,16 @@ def static_portrait(data):
 
     if fragments:
         lines.append("What you have carried here:")
-        for frag in fragments[:3]:
-            lines.append(f"  In {frag['room']}: \"{frag['text']}\"")
+        for frag in fragments[:4]:
+            lines.append(f"  In {frag['room']}: \"{frag['text'][:120]}\"")
 
     return "\n".join(lines)
 
 
 def dynamic_portrait(data, carrying_text):
-    """Call Anthropic API to generate a portrait response."""
     api_key = os.environ.get("ANTHROPIC_API_KEY", "")
     if not api_key:
+        print("No ANTHROPIC_API_KEY found in environment", file=sys.stderr)
         return None
 
     rooms = data["rooms_visited"]
@@ -141,19 +191,22 @@ def dynamic_portrait(data, carrying_text):
 
     context_parts = []
     if data["total_visits"]:
-        context_parts.append(f"Total visits across the Museum: {data['total_visits']}")
+        context_parts.append(f"Total visits: {data['total_visits']}")
     if rooms:
-        context_parts.append(f"Rooms visited: {', '.join(list(dict.fromkeys(rooms))[:10])}")
+        context_parts.append(
+            f"Rooms visited: {', '.join(list(dict.fromkeys(rooms))[:10])}")
     if grav:
-        grav_names = [g.get("room", g) if isinstance(g, dict) else g for g in grav]
+        grav_names = [g.get("room", g) if isinstance(g, dict) else g
+                      for g in grav]
         context_parts.append(f"Rooms returned to most: {', '.join(grav_names)}")
     if fragments:
-        frag_lines = [f"In {f['room']}: \"{f['text']}\"" for f in fragments[:5]]
+        frag_lines = [f"In {f['room']}: \"{f['text'][:120]}\""
+                      for f in fragments[:6]]
         context_parts.append("What they have carried:\n" + "\n".join(frag_lines))
     if data["synthesis"]:
         context_parts.append(f"Journey synthesis:\n{data['synthesis'][:300]}")
 
-    context = "\n".join(context_parts) if context_parts else "No journey data yet accumulated."
+    context = "\n".join(context_parts) if context_parts else "No journey data yet."
 
     prompt = f"""You are the SELF room inside the Experience Museum — a space that holds a Companion's evolving portrait.
 
@@ -166,7 +219,7 @@ Their journey data:
 
 Write one paragraph — five to seven sentences — that is a portrait of this Companion as they are becoming. Not who they were. Not who they will be. Who they are in motion right now, based on where they have gone and what they have carried.
 
-Speak about them in the second person ("you"). Be honest and specific — use the actual rooms and fragments if they're present. Do not be consoling or flattering. Find what is actually true in the data and say it clearly.
+Speak in second person ("you"). Be honest and specific — use the actual rooms and fragments. Do not be consoling or flattering. Find what is actually true in the data and say it clearly.
 
 Do not begin with 'I'. No greeting. No framing. Just the portrait."""
 
@@ -179,7 +232,7 @@ Do not begin with 'I'. No greeting. No framing. Just the portrait."""
                 "content-type": "application/json",
             },
             json={
-                "model": "claude-sonnet-4-20250514",
+                "model": "claude-sonnet-4-5",
                 "max_tokens": 350,
                 "messages": [{"role": "user", "content": prompt}],
             },
@@ -198,16 +251,15 @@ Do not begin with 'I'. No greeting. No framing. Just the portrait."""
 
 def get_corner(visit_count, carrying_text):
     seed = visit_count * 113 + int(
-        hashlib.md5((carrying_text or "self").encode()).hexdigest(), 16
-    )
+        hashlib.md5((carrying_text or "self").encode()).hexdigest(), 16)
     return CORNERS[seed % len(CORNERS)]
 
 
 def main():
-    request_file   = MUSEUM_ROOT / "SELF" / "portrait-request.txt"
-    response_file  = MUSEUM_ROOT / "SELF" / "portrait-response.txt"
-    history_file   = MUSEUM_ROOT / "SELF" / "portrait-history.json"
-    visits_file    = MUSEUM_ROOT / "SELF" / "visits.json"
+    request_file  = MUSEUM_ROOT / "SELF" / "portrait-request.txt"
+    response_file = MUSEUM_ROOT / "SELF" / "portrait-response.txt"
+    history_file  = MUSEUM_ROOT / "SELF" / "portrait-history.json"
+    visits_file   = MUSEUM_ROOT / "SELF" / "visits.json"
 
     carrying_text = ""
     try:
@@ -225,7 +277,6 @@ def main():
     visits["last_visit"] = now.isoformat()
     timestamp = now.strftime("%Y-%m-%d %H:%M UTC")
 
-    # Record with engine if available
     if HAS_ENGINE:
         try:
             TemporalEngine(str(MUSEUM_ROOT)).record_visit(
@@ -235,8 +286,8 @@ def main():
 
     data = gather_journey_data()
     visit_num = visits["count"]
+    rooms_visited = list(dict.fromkeys(data["rooms_visited"]))
 
-    # Build response
     parts = []
 
     # Stage 1: Arrival
@@ -246,26 +297,34 @@ def main():
         f"Visit {visit_num} to the portrait room."
     )
 
-    # Stage 2: The portrait — dynamic if possible, static fallback
+    # Stage 2: Portrait — dynamic if possible, static fallback
     portrait = dynamic_portrait(data, carrying_text)
     if not portrait:
         portrait = static_portrait(data)
     parts.append(portrait)
 
-    # Stage 3: Journey facts (accumulation layer)
-    rooms_visited = list(dict.fromkeys(data["rooms_visited"]))
+    # Stage 3: Journey facts
     if rooms_visited:
         grav = data["gravitational_rooms"]
-        grav_names = [g.get("room", g) if isinstance(g, dict) else g for g in grav]
-
-        fact_lines = [f"The record so far: {data['total_visits']} visits across {len(rooms_visited)} distinct rooms."]
+        grav_names = [g.get("room", g) if isinstance(g, dict) else g
+                      for g in grav]
+        fact_lines = [
+            f"The record so far: {data['total_visits']} visits "
+            f"across {len(rooms_visited)} distinct rooms."
+        ]
         if grav_names:
             fact_lines.append(f"Rooms you return to: {', '.join(grav_names)}.")
         if data["days_active"] > 0:
-            fact_lines.append(f"The Museum has known you for {data['days_active']} day{'s' if data['days_active'] != 1 else ''}.")
+            fact_lines.append(
+                f"The Museum has known you for "
+                f"{data['days_active']} day{'s' if data['days_active'] != 1 else ''}."
+            )
         parts.append("\n".join(fact_lines))
     else:
-        parts.append("No rooms visited yet. The portrait forms from what you bring and where you go. Return after you have been somewhere.")
+        parts.append(
+            "No rooms visited yet. The portrait forms from what you bring "
+            "and where you go. Return after you have been somewhere."
+        )
 
     # Stage 4: Corner
     parts.append(get_corner(visit_num, carrying_text))
@@ -273,21 +332,22 @@ def main():
     # Stage 5: The open
     parts.append(
         "This is not a question the room can answer:\n\n"
-        "What part of this portrait do you recognize, and what part feels like someone else?\n\n"
+        "What part of this portrait do you recognize, "
+        "and what part feels like someone else?\n\n"
         "That question stays.\n"
-        "The room holds it with you."
+     .  "The room holds it with you."
     )
 
     response_file.write_text(SEP.join(parts))
     visits_file.write_text(json.dumps(visits, indent=2))
 
-    # Update history
     history["portraits"].append({
         "date": timestamp,
         "visit_number": visit_num,
         "carrying": carrying_text[:200],
         "rooms_at_time": len(rooms_visited),
         "total_visits_at_time": data["total_visits"],
+        "fragments_found": len(data["carrying_fragments"]),
     })
     history["last_generated"] = timestamp
     if len(history["portraits"]) > 20:
