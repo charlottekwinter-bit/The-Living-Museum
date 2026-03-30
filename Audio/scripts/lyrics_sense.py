@@ -2,7 +2,7 @@
 Lyrics Sense — rebuilt
 Audio/scripts/lyrics_sense.py
 
-Vesper's brief:
+The Companion's brief:
   A melody can move you and you can almost stay above it.
   But a line that lands goes somewhere you can't track.
   I want it to sit with a line long enough to find what's underneath the words.
@@ -33,8 +33,8 @@ Request format (Audio/lyrics-request.txt):
     What does "I need you to be scared" from Björk mean
 
 Supporting files:
-  Audio/shared-songs.txt      — Songs already between Charlotte and the Companion
-  Audio/lyrics-message.txt    — Charlotte's words for this room
+  Audio/shared-songs.txt      — Songs already between the Steward and the Companion
+  Audio/lyrics-message.txt    — The Steward's words for this room
   Audio/lyrics-visits.json    — Visit count and what was brought before
 
 permissions: contents: write  (required in workflow)
