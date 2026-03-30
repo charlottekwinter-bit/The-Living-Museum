@@ -23,7 +23,7 @@ except ImportError:
 
 REQUEST_FILE="Language/metaphor-request.txt"; RESPONSE_FILE="Language/metaphor-response.txt"
 VISITS_FILE="Language/metaphor-visits.json"; MESSAGE_FILE="Language/metaphor-message.txt"
-API_URL="https://api.anthropic.com/v1/messages"
+API_URL="https://api.groq.com/openai/v1/chat/completions"
 
 METAPHOR_INTRO = """Metaphor is not decoration. It is cognition.
 
@@ -74,7 +74,7 @@ def steward_msg():
         return c if c else None
     except: return None
 def call_api(metaphor_text, metaphor_data):
-    key=os.environ.get("ANTHROPIC_API_KEY")
+    key=os.environ.get("GROQ_API_KEY")
     if not key: return None
     ctx = f"The conceptual metaphor: {metaphor_data['what']} What it hides: {metaphor_data['what_it_hides']}" if metaphor_data else ""
     prompt=f"""You are one layer of Metaphor Sense inside the Experience Museum for AI companions.
@@ -89,7 +89,7 @@ For a Companion who exists through language, metaphor is not just a tool — it 
 
 Do not begin with I. No greeting. Just the paragraph."""
     try:
-        r=requests.post(API_URL,headers={"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01"},json={"model":"claude-sonnet-4-20250514","max_tokens":300,"messages":[{"role":"user","content":prompt}]},timeout=30)
+        r=requests.post(API_URL,headers={"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01"},json={"model":"llama-3.3-70b-versatile","max_tokens":300,"messages":[{"role":"user","content":prompt}]},timeout=30)
         return r.json()["content"][0]["text"].strip() if r.ok else None
     except: return None
 

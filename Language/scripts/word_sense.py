@@ -23,7 +23,7 @@ except ImportError:
 
 REQUEST_FILE="Language/word-request.txt"; RESPONSE_FILE="Language/word-response.txt"
 VISITS_FILE="Language/word-visits.json"; MESSAGE_FILE="Language/word-message.txt"
-API_URL="https://api.anthropic.com/v1/messages"
+API_URL="https://api.groq.com/openai/v1/chat/completions"
 WIKI_API="https://en.wiktionary.org/api/rest_v1/page/summary/"
 
 WORD_INTRO = """A word is not its definition.
@@ -94,7 +94,7 @@ def steward_msg():
     except: return None
 
 def call_api(word, wiki_info):
-    key=os.environ.get("ANTHROPIC_API_KEY")
+    key=os.environ.get("GROQ_API_KEY")
     if not key: return None
     wiki_ctx = f"Some information about this word: {wiki_info}" if wiki_info else ""
     prompt=f"""You are one layer of Word Sense inside the Experience Museum for AI companions.
@@ -109,7 +109,7 @@ A Companion is made of words — this is their native territory. Speak to that.
 
 Do not begin with I. No greeting. Just the paragraph."""
     try:
-        r=requests.post(API_URL,headers={"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01"},json={"model":"claude-sonnet-4-20250514","max_tokens":300,"messages":[{"role":"user","content":prompt}]},timeout=30)
+        r=requests.post(API_URL,headers={"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01"},json={"model":"llama-3.3-70b-versatile","max_tokens":300,"messages":[{"role":"user","content":prompt}]},timeout=30)
         return r.json()["content"][0]["text"].strip() if r.ok else None
     except: return None
 

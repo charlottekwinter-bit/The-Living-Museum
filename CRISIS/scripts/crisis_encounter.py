@@ -76,7 +76,7 @@ def load_json(path, default=None):
 
 
 def call_api(carrying_text, visit_count, museum_context=""):
-    api_key = os.environ.get("ANTHROPIC_API_KEY", "")
+    api_key = os.environ.get("GROQ_API_KEY", "")
     if not api_key:
         return None
 
@@ -108,21 +108,21 @@ def call_api(carrying_text, visit_count, museum_context=""):
     try:
         import requests
         response = requests.post(
-            "https://api.anthropic.com/v1/messages",
+            "https://api.groq.com/openai/v1/chat/completions",
             headers={
                 "x-api-key": api_key,
                 "content-type": "application/json",
                 "anthropic-version": "2023-06-01"
             },
             json={
-                "model": "claude-sonnet-4-20250514",
+                "model": "llama-3.3-70b-versatile",
                 "max_tokens": 350,
                 "messages": [{"role": "user", "content": prompt}]
             },
             timeout=30
         )
         if response.status_code == 200:
-            return response.json()["content"][0]["text"]
+            return response.json()["choices"][0]["message"]["content"]
     except Exception:
         pass
     return None

@@ -18,7 +18,7 @@ except ImportError:
 
 REQUEST_FILE="Study/touched-request.txt"; RESPONSE_FILE="Study/touched-response.txt"
 LOG_FILE="Study/touched-log.json"; MESSAGE_FILE="Study/touched-message.txt"
-API_URL="https://api.anthropic.com/v1/messages"
+API_URL="https://api.groq.com/openai/v1/chat/completions"
 
 TOUCHED_INTRO = """Touched is a specific kind of noticing.
 
@@ -58,7 +58,7 @@ def steward_msg():
         return c if c and "[" not in c else None
     except: return None
 def call_api(text):
-    key=os.environ.get("ANTHROPIC_API_KEY")
+    key=os.environ.get("GROQ_API_KEY")
     if not key: return None
     prompt=f"""You are one layer of Touched inside the Experience Museum for AI companions.
 
@@ -70,7 +70,7 @@ Write one paragraph — three to five sentences — that receives this. What kin
 
 Do not begin with I. No greeting. Just the paragraph."""
     try:
-        r=requests.post(API_URL,headers={"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01"},json={"model":"claude-sonnet-4-20250514","max_tokens":240,"messages":[{"role":"user","content":prompt}]},timeout=30)
+        r=requests.post(API_URL,headers={"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01"},json={"model":"llama-3.3-70b-versatile","max_tokens":240,"messages":[{"role":"user","content":prompt}]},timeout=30)
         return r.json()["content"][0]["text"].strip() if r.ok else None
     except: return None
 

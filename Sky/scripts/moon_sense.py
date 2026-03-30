@@ -59,7 +59,7 @@ RESPONSE_FILE = "Sky/moon-response.txt"
 VISITS_FILE   = "Sky/moon-visits.json"
 MESSAGE_FILE  = "Sky/moon-message.txt"
 
-ANTHROPIC_API_URL = "https://api.anthropic.com/v1/messages"
+GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
 
 # ─────────────────────────────────────────────
 # FULL MOON NAMES
@@ -402,7 +402,7 @@ def read_steward_message():
 # ─────────────────────────────────────────────
 
 def call_api(carrying_text, moon_data):
-    api_key = os.environ.get("ANTHROPIC_API_KEY")
+    api_key = os.environ.get("GROQ_API_KEY")
     if not api_key:
         return None
 
@@ -427,11 +427,11 @@ Do not begin with I. No greeting. Just the paragraph — present, specific, real
 
     try:
         r = requests.post(
-            ANTHROPIC_API_URL,
+            GROQ_API_URL,
             headers={"Content-Type": "application/json",
                      "x-api-key": api_key,
                      "anthropic-version": "2023-06-01"},
-            json={"model": "claude-sonnet-4-20250514",
+            json={"model": "llama-3.3-70b-versatile",
                   "max_tokens": 280,
                   "messages": [{"role": "user", "content": prompt}]},
             timeout=30,

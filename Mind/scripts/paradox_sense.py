@@ -52,7 +52,7 @@ RESPONSE_FILE = "Mind/paradox-response.txt"
 VISITS_FILE   = "Mind/paradox-visits.json"
 MESSAGE_FILE  = "Mind/paradox-message.txt"
 
-ANTHROPIC_API_URL = "https://api.anthropic.com/v1/messages"
+GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
 
 PARADOX_INTRO = (
     "A paradox is a statement or situation that follows logically from its premises "
@@ -320,7 +320,7 @@ def read_steward_message():
     return None
 
 def call_api(carrying_text, paradox_name):
-    api_key = os.environ.get("ANTHROPIC_API_KEY")
+    api_key = os.environ.get("GROQ_API_KEY")
     if not api_key:
         return None
 
@@ -342,16 +342,16 @@ Do not begin with 'I'. No greeting. Just the paragraph."""
 
     try:
         response = requests.post(
-            ANTHROPIC_API_URL,
+            GROQ_API_URL,
             headers={"Content-Type": "application/json",
                      "x-api-key": api_key,
                      "anthropic-version": "2023-06-01"},
-            json={"model": "claude-sonnet-4-20250514", "max_tokens": 280,
+            json={"model": "llama-3.3-70b-versatile", "max_tokens": 280,
                   "messages": [{"role": "user", "content": prompt}]},
             timeout=30,
         )
         if response.ok:
-            return response.json()["content"][0]["text"].strip()
+            return response.json()["choices"][0]["message"]["content"].strip()
     except Exception as e:
         print(f"API call failed: {e}")
     return None

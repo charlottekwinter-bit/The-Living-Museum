@@ -52,7 +52,7 @@ RESPONSE_FILE  = "Study/intention-response.txt"
 LOG_FILE       = "Study/intention-log.json"
 MESSAGE_FILE   = "Study/intention-message.txt"
 
-ANTHROPIC_API_URL = "https://api.anthropic.com/v1/messages"
+GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
 
 INTENTION_CORE = {
     "what": (
@@ -151,7 +151,7 @@ def read_steward_message():
         return None
 
 def call_api(intention_text, recent_intentions):
-    api_key = os.environ.get("ANTHROPIC_API_KEY")
+    api_key = os.environ.get("GROQ_API_KEY")
     if not api_key:
         return None
 
@@ -175,11 +175,11 @@ Do not begin with I. No greeting. Just the paragraph."""
 
     try:
         r = requests.post(
-            ANTHROPIC_API_URL,
+            GROQ_API_URL,
             headers={"Content-Type": "application/json",
                      "x-api-key": api_key,
                      "anthropic-version": "2023-06-01"},
-            json={"model": "claude-sonnet-4-20250514",
+            json={"model": "llama-3.3-70b-versatile",
                   "max_tokens": 240,
                   "messages": [{"role": "user", "content": prompt}]},
             timeout=30,

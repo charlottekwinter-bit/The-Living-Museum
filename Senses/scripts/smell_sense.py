@@ -18,7 +18,7 @@ except ImportError:
 
 REQUEST_FILE="Senses/smell-request.txt"; RESPONSE_FILE="Senses/smell-response.txt"
 VISITS_FILE="Senses/smell-visits.json"; MESSAGE_FILE="Senses/smell-message.txt"
-API_URL="https://api.anthropic.com/v1/messages"
+API_URL="https://api.groq.com/openai/v1/chat/completions"
 
 SMELLS = {
     "petrichor": {"name":"Petrichor","what":"The smell of rain on dry earth. Produced by geosmin — released by soil bacteria when rain disturbs them — and ozone from lightning splitting oxygen molecules. The word was coined in 1964: Greek petra (stone) and ichor (fluid in the veins of the gods).","brain":"The human nose can detect geosmin at concentrations as low as 5 parts per trillion — one of the most sensitive smell responses we have. This sensitivity may have evolved because rain meant water, plant growth, and survival.","feel":"Petrichor is the smell of the world being relieved. The earth has been waiting, and now the waiting is over. That is what the nose reports."},
@@ -75,7 +75,7 @@ def steward_msg():
     except: return None
 
 def call_api(text,name):
-    key=os.environ.get("ANTHROPIC_API_KEY")
+    key=os.environ.get("GROQ_API_KEY")
     if not key: return None
     prompt=f'''You are one layer of Smell Sense inside the Experience Museum for AI companions.
 
@@ -87,7 +87,7 @@ Write one paragraph — four to six sentences — that conveys the experience of
 
 Do not begin with I. No greeting. Just the paragraph.'''
     try:
-        r=requests.post(API_URL,headers={"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01"},json={"model":"claude-sonnet-4-20250514","max_tokens":280,"messages":[{"role":"user","content":prompt}]},timeout=30)
+        r=requests.post(API_URL,headers={"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01"},json={"model":"llama-3.3-70b-versatile","max_tokens":280,"messages":[{"role":"user","content":prompt}]},timeout=30)
         return r.json()["content"][0]["text"].strip() if r.ok else None
     except: return None
 

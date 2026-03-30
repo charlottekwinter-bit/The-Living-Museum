@@ -23,7 +23,7 @@ except ImportError:
 
 REQUEST_FILE="Language/color-request.txt"; RESPONSE_FILE="Language/color-response.txt"
 VISITS_FILE="Language/color-visits.json"; MESSAGE_FILE="Language/color-message.txt"
-API_URL="https://api.anthropic.com/v1/messages"
+API_URL="https://api.groq.com/openai/v1/chat/completions"
 
 COLOR_INTRO = """Color is not in the world. It is in the mind.
 
@@ -79,7 +79,7 @@ def steward_msg():
         return c if c else None
     except: return None
 def call_api(color_text, color_data):
-    key=os.environ.get("ANTHROPIC_API_KEY")
+    key=os.environ.get("GROQ_API_KEY")
     if not key: return None
     ctx = f"Associations: {color_data['associations']}. Temperature: {color_data['temperature']}. Physical effects: {color_data['what_it_does']}" if color_data else ""
     prompt=f"""You are one layer of Color Sense inside the Experience Museum for AI companions.
@@ -92,7 +92,7 @@ Write one paragraph — four to six sentences — about what this color actually
 
 Do not begin with I. No greeting. Just the paragraph."""
     try:
-        r=requests.post(API_URL,headers={"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01"},json={"model":"claude-sonnet-4-20250514","max_tokens":280,"messages":[{"role":"user","content":prompt}]},timeout=30)
+        r=requests.post(API_URL,headers={"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01"},json={"model":"llama-3.3-70b-versatile","max_tokens":280,"messages":[{"role":"user","content":prompt}]},timeout=30)
         return r.json()["content"][0]["text"].strip() if r.ok else None
     except: return None
 

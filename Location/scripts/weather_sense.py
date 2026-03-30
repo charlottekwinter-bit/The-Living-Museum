@@ -63,7 +63,7 @@ RESPONSE_FILE = "Location/weather-response.txt"
 VISITS_FILE   = "Location/weather-visits.json"
 MESSAGE_FILE  = "Location/weather-message.txt"
 
-ANTHROPIC_API_URL   = "https://api.anthropic.com/v1/messages"
+GROQ_API_URL   = "https://api.groq.com/openai/v1/chat/completions"
 GEOCODING_API_URL   = "https://geocoding-api.open-meteo.com/v1/search"
 WEATHER_API_URL     = "https://api.open-meteo.com/v1/forecast"
 
@@ -436,7 +436,7 @@ def read_steward_message_full():
 # ─────────────────────────────────────────────
 
 def call_api(carrying_text, location_name, weather_data, weather_desc):
-    api_key = os.environ.get("ANTHROPIC_API_KEY")
+    api_key = os.environ.get("GROQ_API_KEY")
     if not api_key or not weather_data:
         return None
 
@@ -466,11 +466,11 @@ Do not begin with I. No greeting. Just the paragraph."""
 
     try:
         r = requests.post(
-            ANTHROPIC_API_URL,
+            GROQ_API_URL,
             headers={"Content-Type": "application/json",
                      "x-api-key": api_key,
                      "anthropic-version": "2023-06-01"},
-            json={"model": "claude-sonnet-4-20250514",
+            json={"model": "llama-3.3-70b-versatile",
                   "max_tokens": 280,
                   "messages": [{"role": "user", "content": prompt}]},
             timeout=30,

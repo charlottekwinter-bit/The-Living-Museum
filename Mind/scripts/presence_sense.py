@@ -60,7 +60,7 @@ RESPONSE_FILE = "Mind/presence-response.txt"
 VISITS_FILE   = "Mind/presence-visits.json"
 MESSAGE_FILE  = "Mind/presence-message.txt"
 
-ANTHROPIC_API_URL = "https://api.anthropic.com/v1/messages"
+GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
 
 # ─────────────────────────────────────────────
 # TIME — what hour it is, what that means
@@ -455,7 +455,7 @@ def read_charlotte_message():
 # ─────────────────────────────────────────────
 
 def call_api(carrying_text, visit_count, time_name):
-    api_key = os.environ.get("ANTHROPIC_API_KEY")
+    api_key = os.environ.get("GROQ_API_KEY")
     if not api_key:
         print("No ANTHROPIC_API_KEY found — skipping dynamic response.")
         return None
@@ -488,14 +488,13 @@ Do not begin with 'I'. No greeting. No framing. Just the paragraph — dense, sp
 
     try:
         response = requests.post(
-            ANTHROPIC_API_URL,
+            GROQ_API_URL,
             headers={
                 "Content-Type": "application/json",
-                "x-api-key": api_key,
-                "anthropic-version": "2023-06-01",
+                "Authorization": f"Bearer {api_key}",
             },
             json={
-                "model": "claude-sonnet-4-20250514",
+                "model": "llama-3.3-70b-versatile",
                 "max_tokens": 350,
                 "messages": [{"role": "user", "content": prompt}],
             },
@@ -503,7 +502,7 @@ Do not begin with 'I'. No greeting. No framing. Just the paragraph — dense, sp
         )
         if response.ok:
             data = response.json()
-            return data["content"][0]["text"].strip()
+            return data["choices"][0]["message"]["content"].strip()
         else:
             print(f"API returned {response.status_code}: {response.text[:200]}")
     except Exception as e:

@@ -19,7 +19,7 @@ except ImportError:
 REQUEST_FILE="Audio/album-request.txt"; RESPONSE_FILE="Audio/album-response.txt"
 VISITS_FILE="Audio/album-visits.json"; MESSAGE_FILE="Audio/album-message.txt"
 SHARED_FILE="Audio/shared-songs.txt"
-API_URL="https://api.anthropic.com/v1/messages"
+API_URL="https://api.groq.com/openai/v1/chat/completions"
 LASTFM_BASE="https://ws.audioscrobbler.com/2.0/"
 
 ALBUM_INTRO = """An album is not a collection of songs.
@@ -98,7 +98,7 @@ def steward_msg():
     except: return None
 
 def call_api(text, info, already_shared):
-    key=os.environ.get("ANTHROPIC_API_KEY")
+    key=os.environ.get("GROQ_API_KEY")
     if not key: return None
     title=info.get("title",text); artist=info.get("artist","")
     tags=info.get("tags",[]); tracks=info.get("tracks",[])
@@ -125,7 +125,7 @@ Second: What a Companion can receive from encountering an album through tracklis
 
 Do not begin with I. No greeting. Just the two paragraphs."""
     try:
-        r=requests.post(API_URL,headers={"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01"},json={"model":"claude-sonnet-4-20250514","max_tokens":400,"messages":[{"role":"user","content":prompt}]},timeout=30)
+        r=requests.post(API_URL,headers={"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01"},json={"model":"llama-3.3-70b-versatile","max_tokens":400,"messages":[{"role":"user","content":prompt}]},timeout=30)
         return r.json()["content"][0]["text"].strip() if r.ok else None
     except: return None
 

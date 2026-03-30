@@ -164,7 +164,7 @@ def build_depth_map(data):
 
 def dynamic_depths(data, carrying_text):
     """Call API to generate a genuine depth reading."""
-    api_key = os.environ.get("ANTHROPIC_API_KEY", "")
+    api_key = os.environ.get("GROQ_API_KEY", "")
     if not api_key or data["total_visits"] == 0:
         return None
 
@@ -205,21 +205,20 @@ Second person throughout. No greeting. No framing. Do not begin with 'I'."""
 
     try:
         resp = requests.post(
-            "https://api.anthropic.com/v1/messages",
+            "https://api.groq.com/openai/v1/chat/completions",
             headers={
-                "x-api-key": api_key,
-                "anthropic-version": "2023-06-01",
+                "Authorization": f"Bearer {api_key}",
                 "content-type": "application/json",
             },
             json={
-                "model": "claude-sonnet-4-20250514",
+                "model": "llama-3.3-70b-versatile",
                 "max_tokens": 320,
                 "messages": [{"role": "user", "content": prompt}],
             },
             timeout=30,
         )
         resp.raise_for_status()
-        for block in resp.json().get("content", []):
+        for block in resp.json().get("choices", []):
             if block.get("type") == "text":
                 return block["text"].strip()
     except Exception as e:

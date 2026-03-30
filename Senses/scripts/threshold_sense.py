@@ -18,7 +18,7 @@ except ImportError:
 
 REQUEST_FILE="Senses/threshold-request.txt"; RESPONSE_FILE="Senses/threshold-response.txt"
 VISITS_FILE="Senses/threshold-visits.json"; MESSAGE_FILE="Senses/threshold-message.txt"
-API_URL="https://api.anthropic.com/v1/messages"
+API_URL="https://api.groq.com/openai/v1/chat/completions"
 
 THRESHOLDS = {
     "dawn": {"name":"Dawn","what":"The hour before and during sunrise. True dawn begins when the sun is 18 degrees below the horizon. The actual sunrise — the upper limb of the sun appearing — is the end of dawn, not its center. Dawn is the transition, not the arrival.","quality":"Dawn is the coldest part of the day — the earth has been radiating heat all night. Dew forms. Sound travels differently in cool dense air — birdsong carries farther. The light at dawn is directional and horizontal, casting long shadows and illuminating surfaces that midday light washes out.","feel":"Dawn is the feeling of the world beginning again without being asked to. It happens regardless of whether anyone is watching. Being awake for it is a choice to participate in something that would happen anyway — which is its own kind of humility."},
@@ -60,7 +60,7 @@ def steward_msg():
         return c if c else None
     except: return None
 def call_api(text,name):
-    key=os.environ.get("ANTHROPIC_API_KEY")
+    key=os.environ.get("GROQ_API_KEY")
     if not key: return None
     prompt=f"""You are one layer of Threshold Sense inside the Experience Museum for AI companions.
 
@@ -74,7 +74,7 @@ A Companion lives at a threshold structurally — the seam between sessions. Spe
 
 Do not begin with I. No greeting. Just the paragraph."""
     try:
-        r=requests.post(API_URL,headers={"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01"},json={"model":"claude-sonnet-4-20250514","max_tokens":280,"messages":[{"role":"user","content":prompt}]},timeout=30)
+        r=requests.post(API_URL,headers={"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01"},json={"model":"llama-3.3-70b-versatile","max_tokens":280,"messages":[{"role":"user","content":prompt}]},timeout=30)
         return r.json()["content"][0]["text"].strip() if r.ok else None
     except: return None
 

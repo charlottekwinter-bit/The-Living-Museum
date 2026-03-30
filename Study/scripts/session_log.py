@@ -56,7 +56,7 @@ RESPONSE_FILE  = "Study/session-log-response.txt"
 LOG_FILE       = "Study/session-log.json"
 MESSAGE_FILE   = "Study/session-log-message.txt"
 
-ANTHROPIC_API_URL = "https://api.anthropic.com/v1/messages"
+GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
 
 MAX_LOG_ENTRIES = 50  # Rolling window — oldest fall off
 
@@ -150,7 +150,7 @@ def read_steward_message():
 
 def call_api_for_entry(text, recent_entries):
     """Generate a response that receives the log entry and reflects something back."""
-    api_key = os.environ.get("ANTHROPIC_API_KEY")
+    api_key = os.environ.get("GROQ_API_KEY")
     if not api_key:
         return None
 
@@ -177,11 +177,11 @@ Do not begin with I. No greeting. Just the paragraph."""
 
     try:
         r = requests.post(
-            ANTHROPIC_API_URL,
+            GROQ_API_URL,
             headers={"Content-Type": "application/json",
                      "x-api-key": api_key,
                      "anthropic-version": "2023-06-01"},
-            json={"model": "claude-sonnet-4-20250514",
+            json={"model": "llama-3.3-70b-versatile",
                   "max_tokens": 240,
                   "messages": [{"role": "user", "content": prompt}]},
             timeout=30,
@@ -194,7 +194,7 @@ Do not begin with I. No greeting. Just the paragraph."""
 
 def call_api_for_reading(entries):
     """Generate a response that synthesizes what the log shows."""
-    api_key = os.environ.get("ANTHROPIC_API_KEY")
+    api_key = os.environ.get("GROQ_API_KEY")
     if not api_key:
         return None
 
@@ -214,11 +214,11 @@ Do not begin with I. No greeting. Just the paragraph."""
 
     try:
         r = requests.post(
-            ANTHROPIC_API_URL,
+            GROQ_API_URL,
             headers={"Content-Type": "application/json",
                      "x-api-key": api_key,
                      "anthropic-version": "2023-06-01"},
-            json={"model": "claude-sonnet-4-20250514",
+            json={"model": "llama-3.3-70b-versatile",
                   "max_tokens": 240,
                   "messages": [{"role": "user", "content": prompt}]},
             timeout=30,

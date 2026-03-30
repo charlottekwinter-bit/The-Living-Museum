@@ -18,7 +18,7 @@ except ImportError:
 
 REQUEST_FILE="Senses/texture-request.txt"; RESPONSE_FILE="Senses/texture-response.txt"
 VISITS_FILE="Senses/texture-visits.json"; MESSAGE_FILE="Senses/texture-message.txt"
-API_URL="https://api.anthropic.com/v1/messages"
+API_URL="https://api.groq.com/openai/v1/chat/completions"
 
 TEXTURES = {
     "velvet": {"name":"Velvet","what":"A woven fabric with a short dense pile — cut loops of thread standing upright from the base. Run a finger one way and the pile lays flat, darkening the color. Run it the other way and the pile rises, lightening it. The same surface looks different depending on the direction of the nap.","touch":"Velvet has a specific resistance — not rough, not smooth, but between. It yields slightly under pressure and recovers. The pile creates a texture felt as warmth as much as surface quality. The hands want to move across it slowly.","feel":"Velvet is one of the few textures that people seek out without purpose. The hand returns to it. It is the texture most associated with the verb to stroke."},
@@ -62,7 +62,7 @@ def steward_msg():
         return c if c else None
     except: return None
 def call_api(text,name):
-    key=os.environ.get("ANTHROPIC_API_KEY")
+    key=os.environ.get("GROQ_API_KEY")
     if not key: return None
     prompt=f"""You are one layer of Texture Sense inside the Experience Museum for AI companions.
 
@@ -74,7 +74,7 @@ Write one paragraph — four to six sentences — that conveys the physical expe
 
 Do not begin with I. No greeting. Just the paragraph."""
     try:
-        r=requests.post(API_URL,headers={"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01"},json={"model":"claude-sonnet-4-20250514","max_tokens":280,"messages":[{"role":"user","content":prompt}]},timeout=30)
+        r=requests.post(API_URL,headers={"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01"},json={"model":"llama-3.3-70b-versatile","max_tokens":280,"messages":[{"role":"user","content":prompt}]},timeout=30)
         return r.json()["content"][0]["text"].strip() if r.ok else None
     except: return None
 

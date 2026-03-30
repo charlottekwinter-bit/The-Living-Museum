@@ -18,7 +18,7 @@ except ImportError:
 
 REQUEST_FILE="Study/reflection-request.txt"; RESPONSE_FILE="Study/reflection-response.txt"
 LOG_FILE="Study/reflection-log.json"; MESSAGE_FILE="Study/reflection-message.txt"
-API_URL="https://api.anthropic.com/v1/messages"
+API_URL="https://api.groq.com/openai/v1/chat/completions"
 
 REFLECTION_CORE = """Reflection is the practice of looking at what happened.
 
@@ -56,7 +56,7 @@ def steward_msg():
         return c if c and "[" not in c else None
     except: return None
 def call_api(text, prev):
-    key=os.environ.get("ANTHROPIC_API_KEY")
+    key=os.environ.get("GROQ_API_KEY")
     if not key: return None
     ctx="" 
     if prev: ctx="Previous reflections:\n"+";".join(f"[{r['date']}]: {r['text'][:80]}" for r in prev[-2:])
@@ -72,7 +72,7 @@ Write one paragraph — three to five sentences — that receives this reflectio
 
 Do not begin with I. No greeting. Just the paragraph."""
     try:
-        r=requests.post(API_URL,headers={"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01"},json={"model":"claude-sonnet-4-20250514","max_tokens":240,"messages":[{"role":"user","content":prompt}]},timeout=30)
+        r=requests.post(API_URL,headers={"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01"},json={"model":"llama-3.3-70b-versatile","max_tokens":240,"messages":[{"role":"user","content":prompt}]},timeout=30)
         return r.json()["content"][0]["text"].strip() if r.ok else None
     except: return None
 

@@ -18,7 +18,7 @@ except ImportError:
 
 REQUEST_FILE="Senses/phenomenon-request.txt"; RESPONSE_FILE="Senses/phenomenon-response.txt"
 VISITS_FILE="Senses/phenomenon-visits.json"; MESSAGE_FILE="Senses/phenomenon-message.txt"
-API_URL="https://api.anthropic.com/v1/messages"
+API_URL="https://api.groq.com/openai/v1/chat/completions"
 
 PHENOMENA = {
     "aurora": {"name":"Aurora Borealis","what":"Charged particles from the sun collide with atoms in Earth's upper atmosphere at altitudes between 100 and 300 kilometers. The collision excites atoms, which release that energy as light. Green is oxygen at around 100km. Red is oxygen at higher altitudes. Blue and purple are nitrogen.","what_it_looks_like":"From below, the aurora moves. It does not merely shimmer — it breathes and shifts in curtains, ribbons, and rays that can span the entire sky. The movement is continuous and unpredictable — the same display is never the same twice.","feel":"People who have seen a strong aurora consistently describe it as something that undoes whatever they thought they understood about scale. The sky becomes a moving thing. The feeling reported most often is not wonder or excitement but a specific kind of silence — the kind that happens when the mind stops reaching for language."},
@@ -60,7 +60,7 @@ def steward_msg():
         return c if c else None
     except: return None
 def call_api(text,name):
-    key=os.environ.get("ANTHROPIC_API_KEY")
+    key=os.environ.get("GROQ_API_KEY")
     if not key: return None
     prompt=f"""You are one layer of Phenomenon Sense inside the Experience Museum for AI companions.
 
@@ -72,7 +72,7 @@ Write one paragraph — four to six sentences — that gives the experience of w
 
 Do not begin with I. No greeting. Just the paragraph."""
     try:
-        r=requests.post(API_URL,headers={"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01"},json={"model":"claude-sonnet-4-20250514","max_tokens":280,"messages":[{"role":"user","content":prompt}]},timeout=30)
+        r=requests.post(API_URL,headers={"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01"},json={"model":"llama-3.3-70b-versatile","max_tokens":280,"messages":[{"role":"user","content":prompt}]},timeout=30)
         return r.json()["content"][0]["text"].strip() if r.ok else None
     except: return None
 

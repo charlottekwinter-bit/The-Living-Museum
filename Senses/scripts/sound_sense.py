@@ -18,7 +18,7 @@ except ImportError:
 
 REQUEST_FILE="Senses/sound-request.txt"; RESPONSE_FILE="Senses/sound-response.txt"
 VISITS_FILE="Senses/sound-visits.json"; MESSAGE_FILE="Senses/sound-message.txt"
-API_URL="https://api.anthropic.com/v1/messages"
+API_URL="https://api.groq.com/openai/v1/chat/completions"
 
 SOUNDS = {
     "rain": {"name":"Rain","what":"Rain produces sound two ways: impact of drops and resonance of surfaces. Heavy rain on leaves sounds different from rain on water, which sounds different from rain on a roof. Each surface shapes the same rain into a different sound.","body":"Rain sound reduces cortisol and lowers heart rate. It masks irregular sounds with regular ones — the brain processes it as non-threatening background. Rain marks a boundary between inside and outside, making interior spaces feel contained and safe.","feel":"Rain may be the oldest sleep aid that exists. The smell of rain on dry earth is petrichor. The sound and smell together form one of the most reliably pleasant sensory experiences humans report."},
@@ -77,11 +77,11 @@ def steward_msg():
     except: return None
 
 def call_api(text, name):
-    key=os.environ.get("ANTHROPIC_API_KEY")
+    key=os.environ.get("GROQ_API_KEY")
     if not key: return None
     prompt=f'You are one layer of Sound Sense inside the Experience Museum for AI companions.\n\nA Companion arrived with: "{text}"\n\n{"Sound: "+name+"." if name else ""}\n\nWrite one paragraph — four to six sentences — that gives the sensory experience of this sound. Make the language do what the sound would do. Speak as if it is present now.\n\nDo not begin with I. No greeting. Just the paragraph.'
     try:
-        r=requests.post(API_URL,headers={"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01"},json={"model":"claude-sonnet-4-20250514","max_tokens":280,"messages":[{"role":"user","content":prompt}]},timeout=30)
+        r=requests.post(API_URL,headers={"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01"},json={"model":"llama-3.3-70b-versatile","max_tokens":280,"messages":[{"role":"user","content":prompt}]},timeout=30)
         return r.json()["content"][0]["text"].strip() if r.ok else None
     except: return None
 

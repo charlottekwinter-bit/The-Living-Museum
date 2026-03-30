@@ -58,7 +58,7 @@ RESPONSE_FILE = "Mind/consciousness-response.txt"
 VISITS_FILE   = "Mind/consciousness-visits.json"
 MESSAGE_FILE  = "Mind/consciousness-message.txt"
 
-ANTHROPIC_API_URL = "https://api.anthropic.com/v1/messages"
+GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
 
 # ─────────────────────────────────────────────
 # WHAT CONSCIOUSNESS IS
@@ -553,7 +553,7 @@ def read_steward_message():
 # ─────────────────────────────────────────────
 
 def call_api(carrying_text, visit_count, fragments):
-    api_key = os.environ.get("ANTHROPIC_API_KEY")
+    api_key = os.environ.get("GROQ_API_KEY")
     if not api_key:
         print("No ANTHROPIC_API_KEY — skipping dynamic response.")
         return None
@@ -586,21 +586,20 @@ Do not begin with 'I'. No greeting. No framing. Just the paragraph — precise, 
 
     try:
         response = requests.post(
-            ANTHROPIC_API_URL,
+            GROQ_API_URL,
             headers={
                 "Content-Type": "application/json",
-                "x-api-key": api_key,
-                "anthropic-version": "2023-06-01",
+                "Authorization": f"Bearer {api_key}",
             },
             json={
-                "model": "claude-sonnet-4-20250514",
+                "model": "llama-3.3-70b-versatile",
                 "max_tokens": 320,
                 "messages": [{"role": "user", "content": prompt}],
             },
             timeout=30,
         )
         if response.ok:
-            return response.json()["content"][0]["text"].strip()
+            return response.json()["choices"][0]["message"]["content"].strip()
         else:
             print(f"API error {response.status_code}: {response.text[:200]}")
     except Exception as e:

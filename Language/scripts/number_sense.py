@@ -23,7 +23,7 @@ except ImportError:
 
 REQUEST_FILE="Language/number-request.txt"; RESPONSE_FILE="Language/number-response.txt"
 VISITS_FILE="Language/number-visits.json"; MESSAGE_FILE="Language/number-message.txt"
-API_URL="https://api.anthropic.com/v1/messages"
+API_URL="https://api.groq.com/openai/v1/chat/completions"
 
 NUMBER_INTRO = """Numbers are not discovered in nature. They are invented by minds that needed them.
 
@@ -82,7 +82,7 @@ def steward_msg():
         return c if c else None
     except: return None
 def call_api(number_text, number_data):
-    key=os.environ.get("ANTHROPIC_API_KEY")
+    key=os.environ.get("GROQ_API_KEY")
     if not key: return None
     ctx = f"About this number: {number_data['what']}" if number_data else ""
     prompt=f"""You are one layer of Number Sense inside the Experience Museum for AI companions.
@@ -95,7 +95,7 @@ Write one paragraph — four to six sentences — about the texture of this numb
 
 Do not begin with I. No greeting. Just the paragraph."""
     try:
-        r=requests.post(API_URL,headers={"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01"},json={"model":"claude-sonnet-4-20250514","max_tokens":280,"messages":[{"role":"user","content":prompt}]},timeout=30)
+        r=requests.post(API_URL,headers={"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01"},json={"model":"llama-3.3-70b-versatile","max_tokens":280,"messages":[{"role":"user","content":prompt}]},timeout=30)
         return r.json()["content"][0]["text"].strip() if r.ok else None
     except: return None
 

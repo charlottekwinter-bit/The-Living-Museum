@@ -19,7 +19,7 @@ except ImportError:
 REQUEST_FILE="Audio/artist-request.txt"; RESPONSE_FILE="Audio/artist-response.txt"
 VISITS_FILE="Audio/artist-visits.json"; MESSAGE_FILE="Audio/artist-message.txt"
 SHARED_FILE="Audio/shared-songs.txt"
-API_URL="https://api.anthropic.com/v1/messages"
+API_URL="https://api.groq.com/openai/v1/chat/completions"
 LASTFM_BASE="https://ws.audioscrobbler.com/2.0/"
 WIKI_API="https://en.wikipedia.org/api/rest_v1/page/summary/"
 
@@ -93,7 +93,7 @@ def steward_msg():
     except: return None
 
 def call_api(artist_name, tags, similar, bio, already_shared, shared_songs):
-    key=os.environ.get("ANTHROPIC_API_KEY")
+    key=os.environ.get("GROQ_API_KEY")
     if not key: return None
     shared_context=""
     if already_shared:
@@ -119,7 +119,7 @@ Second: What a Companion can receive from encountering this artist through langu
 
 Do not begin with I. No greeting. Just the two paragraphs."""
     try:
-        r=requests.post(API_URL,headers={"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01"},json={"model":"claude-sonnet-4-20250514","max_tokens":400,"messages":[{"role":"user","content":prompt}]},timeout=30)
+        r=requests.post(API_URL,headers={"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01"},json={"model":"llama-3.3-70b-versatile","max_tokens":400,"messages":[{"role":"user","content":prompt}]},timeout=30)
         return r.json()["content"][0]["text"].strip() if r.ok else None
     except: return None
 

@@ -53,7 +53,7 @@ RESPONSE_FILE = "Body/anatomy-response.txt"
 VISITS_FILE   = "Body/anatomy-visits.json"
 MESSAGE_FILE  = "Body/anatomy-message.txt"
 
-ANTHROPIC_API_URL = "https://api.anthropic.com/v1/messages"
+GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
 
 ANATOMY = {
 
@@ -198,7 +198,7 @@ def read_steward_message():
     return None
 
 def call_api(carrying_text, organ_name):
-    api_key = os.environ.get("ANTHROPIC_API_KEY")
+    api_key = os.environ.get("GROQ_API_KEY")
     if not api_key:
         return None
     organ_context = f"The Companion is exploring the {organ_name}." if organ_name else ""
@@ -218,15 +218,15 @@ Do not begin with 'I'. No greeting. Just the paragraph."""
 
     try:
         response = requests.post(
-            ANTHROPIC_API_URL,
+            GROQ_API_URL,
             headers={"Content-Type": "application/json",
                      "x-api-key": api_key, "anthropic-version": "2023-06-01"},
-            json={"model": "claude-sonnet-4-20250514", "max_tokens": 280,
+            json={"model": "llama-3.3-70b-versatile", "max_tokens": 280,
                   "messages": [{"role": "user", "content": prompt}]},
             timeout=30,
         )
         if response.ok:
-            return response.json()["content"][0]["text"].strip()
+            return response.json()["choices"][0]["message"]["content"].strip()
     except Exception as e:
         print(f"API call failed: {e}")
     return None

@@ -23,7 +23,7 @@ except ImportError:
 
 REQUEST_FILE="Language/quote-request.txt"; RESPONSE_FILE="Language/quote-response.txt"
 VISITS_FILE="Language/quote-visits.json"; MESSAGE_FILE="Language/quote-message.txt"
-API_URL="https://api.anthropic.com/v1/messages"
+API_URL="https://api.groq.com/openai/v1/chat/completions"
 
 QUOTE_INTRO = """A quote is a line that survived.
 
@@ -72,7 +72,7 @@ def steward_msg():
         return c if c else None
     except: return None
 def call_api(quote_text):
-    key=os.environ.get("ANTHROPIC_API_KEY")
+    key=os.environ.get("GROQ_API_KEY")
     if not key: return None
     prompt=f"""You are one layer of Quote Sense inside the Experience Museum for AI companions.
 
@@ -86,7 +86,7 @@ Do not attribute it or look it up — respond to the line itself and what it doe
 
 Do not begin with I. No greeting. Just the paragraph."""
     try:
-        r=requests.post(API_URL,headers={"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01"},json={"model":"claude-sonnet-4-20250514","max_tokens":300,"messages":[{"role":"user","content":prompt}]},timeout=30)
+        r=requests.post(API_URL,headers={"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01"},json={"model":"llama-3.3-70b-versatile","max_tokens":300,"messages":[{"role":"user","content":prompt}]},timeout=30)
         return r.json()["content"][0]["text"].strip() if r.ok else None
     except: return None
 
