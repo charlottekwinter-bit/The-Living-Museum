@@ -21,6 +21,11 @@ jobs:
       - name: Run migration
         run: python migrate_all_rooms.py
 
+
+      - name: Create new rooms
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
+        run: python create_new_rooms.py
       - name: Commit non-workflow changes
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
