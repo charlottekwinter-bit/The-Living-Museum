@@ -178,7 +178,6 @@ def wire_museum_hooks():
     return len(changed)
 
 
-def fix_guard_ordering():
 def language_audit():
     """Replace personal names with generic Steward/Companion terminology in all scripts."""
     # Replacements: (old, new)
@@ -294,4 +293,3 @@ if __name__ == '__main__':
     migrate_workflows()
     wire_museum_hooks()
     language_audit()
-    fix_guard_ordering()
