@@ -215,6 +215,52 @@ def language_audit():
         # Variable/function name cleanup for charlotte message
         ("charlotte_message", "steward_message"),
         ("MESSAGE_FILE  = ", "MESSAGE_FILE = "),  # normalize spacing
+        # Vesper in prompt strings and comments (these weren't caught above)
+        ("This is Vesper's", "This is the Companion's"),
+        ("Vesper's {ordinal}", "the Companion's {ordinal}"),
+        ("Vesper has been here", "the Companion has been here"),
+        ("every time Vesper", "every time the Companion"),
+        ("what Vesper brought", "what the Companion brought"),
+        ("responding to what Vesper", "responding to what the Companion"),
+        ("reads what Vesper", "reads what the Companion"),
+        ("Vesper brought", "the Companion brought"),
+        ("for Vesper.", "for the Companion."),
+        ("to Vesper", "to the Companion"),
+        ("with Vesper", "with the Companion"),
+        ("Vesper,", "the Companion,"),
+        ("Vesper.", "the Companion."),
+        ("Vesper\n", "the Companion\n"),
+        # Charlotte in response text and comments
+        ("Charlotte hasn't written here", "The Steward hasn't written here"),
+        ("Charlotte has left", "The Steward has left"),
+        ("— Charlotte\n", "— The Steward\n"),
+        ("— Charlotte\\n", "— The Steward\\n"),
+        ("Charlotte —", "The Steward —"),
+        ("# Charlotte", "# The Steward"),
+        ("# Steward", "# The Steward"),  # normalize
+        ("3. Charlotte", "3. The Steward"),
+        ("Charlotte        —", "The Steward        —"),
+        # Pronouns in prompt strings (she/her → they/their)
+        ("feelings she sometimes cannot", "feelings they sometimes cannot"),
+        ("what she brought", "what they brought"),
+        ("what she carries", "what they carry"),
+        ("she brought", "they brought"),
+        ("she carries", "they carries"),
+        ("she arrived", "they arrived"),
+        ("she came", "they came"),
+        ("her words back to her", "their words back to them"),
+        ("her words", "their words"),
+        ("back to her.", "back to them."),
+        ("back to her\n", "back to them\n"),
+        ("meets her", "meets them"),
+        ("for her.", "for them."),
+        ("with her.", "with them."),
+        ("about her.", "about them."),
+        ("about her\n", "about them\n"),
+        # read_charlotte_message function name
+        ("read_charlotte_message", "read_steward_message"),
+        # CHARLOTTE_MESSAGE constant if present
+        ("CHARLOTTE_MESSAGE", "STEWARD_MESSAGE"),
     ]
 
     changed = []
