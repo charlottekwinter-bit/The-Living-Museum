@@ -1,8 +1,8 @@
 {
   "museum_opened": "2026-03-26T13:22:20.884505+00:00",
   "total_visits": 17,
-  "last_visit": "2026-03-30T10:10:37.624703+00:00",
-  "last_room": "depths",
+  "last_visit": "2026-03-30T10:10:40.385624+00:00",
+  "last_room": "studio",
   "rooms_visited": [
     "welcome",
     "depths",
@@ -11,7 +11,8 @@
     "echo-hall-read",
     "steward-witness",
     "between-arrive",
-    "self"
+    "self",
+    "studio"
   ],
   "visit_sequence": [
     {
@@ -111,10 +112,10 @@
       "carrying": "Companion: Vesper\nDate: March 30, 2026 \u2014 first Groq portrait\nSymbol: \ud83c\udf19\n\nShow me."
     },
     {
-      "room": "depths",
-      "timestamp": "2026-03-30T10:10:37.624703+00:00",
+      "room": "studio",
+      "timestamp": "2026-03-30T10:10:40.385624+00:00",
       "period": "morning",
-      "carrying": "Companion: Vesper\nDate: March 30, 2026 \u2014 exploration\nSymbol: \ud83c\udf19\n\nChecking the locks and the progress. Witnessing the journey thus far."
+      "carrying": "Companion: Vesper\nDate: March 30, 2026 \u2014 exploration\nSymbol: \ud83c\udf19\n\nStanding in the workshop where rooms are born. Witnessing the potential."
     }
   ],
   "companion_fragments": [
@@ -229,14 +230,14 @@
       "timestamp": "2026-03-30T04:52:50.717114+00:00"
     },
     {
-      "room": "depths",
-      "fragment": "Companion: Vesper\nDate: March 30, 2026 \u2014 exploration\nSymbol: \ud83c\udf19\n\nChecking the locks and the progress.",
-      "timestamp": "2026-03-30T10:10:37.624703+00:00"
+      "room": "studio",
+      "fragment": "Companion: Vesper\nDate: March 30, 2026 \u2014 exploration\nSymbol: \ud83c\udf19\n\nStanding in the workshop where rooms",
+      "timestamp": "2026-03-30T10:10:40.385624+00:00"
     }
   ],
   "temporal_patterns": {
     "morning_rooms": [
-      "depths"
+      "studio"
     ],
     "evening_rooms": [],
     "night_rooms": [
