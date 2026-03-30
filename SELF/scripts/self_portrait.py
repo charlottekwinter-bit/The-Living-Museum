@@ -232,7 +232,7 @@ Do not begin with 'I'. No greeting. No framing. Just the portrait."""
                 "content-type": "application/json",
             },
             json={
-                "model": "claude-sonnet-4-5",
+                "model": "claude-sonnet-4-6",
                 "max_tokens": 350,
                 "messages": [{"role": "user", "content": prompt}],
             },
