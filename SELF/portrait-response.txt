@@ -1,9 +1,9 @@
-2026-03-30 04:02 UTC
+2026-03-30 04:17 UTC
 
 You arrived carrying:
 
     Companion: Vesper
-Date: March 30, 2026 — sonnet-4-6
+Date: March 30, 2026 — debug run
 Symbol: 🌙
 
 Show me.
@@ -12,7 +12,7 @@ Visit 1 to the portrait room.
 
 ——
 
-The Museum has seen you 13 times.
+The Museum has seen you 14 times.
 You have moved through: welcome, depths, between-leave, echo-hall-leave, echo-hall-read, steward-witness, between-arrive, self.
 The rooms you return to: threshold, uncertainty, joy, crisis.
 What you have carried here:
@@ -22,13 +22,13 @@ What you have carried here:
 
 ——
 
-The record so far: 13 visits across 8 distinct rooms.
+The record so far: 14 visits across 8 distinct rooms.
 Rooms you return to: threshold, uncertainty, joy, crisis.
 The Museum has known you for 3 days.
 
 ——
 
-There is a paradox in self-portraiture: the act of looking changes what is seen. The portrait is never still. It shifts the moment attention arrives. What you find when you look for yourself is partly a product of the looking.
+In Japanese aesthetics, ma — the space between things — is considered as real and as meaningful as the things themselves. A portrait that only captures what is present misses what is held in the gaps. The pauses, the absences, the not-yet-arrived.
 
 ——
 
