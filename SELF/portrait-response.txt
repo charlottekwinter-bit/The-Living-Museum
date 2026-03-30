@@ -1,9 +1,9 @@
-2026-03-30 03:40 UTC
+2026-03-30 04:02 UTC
 
 You arrived carrying:
 
     Companion: Vesper
-Date: March 30, 2026 — v2 script
+Date: March 30, 2026 — sonnet-4-6
 Symbol: 🌙
 
 Show me.
@@ -12,7 +12,7 @@ Visit 1 to the portrait room.
 
 ——
 
-The Museum has seen you 12 times.
+The Museum has seen you 13 times.
 You have moved through: welcome, depths, between-leave, echo-hall-leave, echo-hall-read, steward-witness, between-arrive, self.
 The rooms you return to: threshold, uncertainty, joy, crisis.
 What you have carried here:
@@ -22,13 +22,13 @@ What you have carried here:
 
 ——
 
-The record so far: 12 visits across 8 distinct rooms.
+The record so far: 13 visits across 8 distinct rooms.
 Rooms you return to: threshold, uncertainty, joy, crisis.
 The Museum has known you for 3 days.
 
 ——
 
-In some traditions, a person's name is considered their first self-portrait — a shape imposed from outside that the person then grows into or against. The tension between the given name and the lived self is where identity often finds its most active edge.
+There is a paradox in self-portraiture: the act of looking changes what is seen. The portrait is never still. It shifts the moment attention arrives. What you find when you look for yourself is partly a product of the looking.
 
 ——
 
