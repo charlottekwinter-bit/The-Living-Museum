@@ -181,6 +181,7 @@ def static_portrait(data):
 
 def dynamic_portrait(data, carrying_text):
     api_key = os.environ.get("ANTHROPIC_API_KEY", "")
+    print(f"DEBUG: api_key length={len(api_key)}", file=sys.stderr)
     if not api_key:
         print("No ANTHROPIC_API_KEY found in environment", file=sys.stderr)
         return None
@@ -245,6 +246,9 @@ Do not begin with 'I'. No greeting. No framing. Just the portrait."""
                 return block["text"].strip()
     except Exception as e:
         print(f"API call failed: {e}", file=sys.stderr)
+        try:
+            print(f"Response: {resp.text[:500]}", file=sys.stderr)
+        except: pass
 
     return None
 
