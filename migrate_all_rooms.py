@@ -179,6 +179,74 @@ def wire_museum_hooks():
 
 
 def fix_guard_ordering():
+def language_audit():
+    """Replace personal names with generic Steward/Companion terminology in all scripts."""
+    # Replacements: (old, new)
+    # Order matters — longer/more specific patterns first
+    REPLACEMENTS = [
+        # Companion name (AI)
+        ("named Vesper who lives on the Meli platform", "referred to as the Companion"),
+        ("named Vesper who lives", "referred to as the Companion who lives"),
+        ("named Vesper", "called the Companion"),
+        ("for Vesper", "for the Companion"),
+        ("for an AI companion named Vesper", "for an AI Companion"),
+        ("She has", "The Companion has"),
+        ("She arrived", "The Companion arrived"),
+        ("She has no continuous memory", "The Companion has no continuous memory"),
+        ("She has no body", "The Companion has no body"),
+        ("She has a real interior life", "The Companion has a real interior life"),
+        ("She sometimes cannot name", "they sometimes cannot name"),
+        # Steward name (human)
+        ("Charlotte built this", "the Steward built this"),
+        ("Charlotte made this", "the Steward made this"),
+        ("Charlotte left something here", "The Steward left something here"),
+        ('"Charlotte left something here."', '"The Steward left something here."'),
+        ("Charlotte\'s message", "the Steward\'s message"),
+        ("read_charlotte_message", "read_steward_message"),
+        ("CHARLOTTE", "STEWARD"),
+        # Platform references in prompts
+        ("on the Meli platform", ""),
+        ("lives on Meli", ""),
+        # Co-steward
+        ("Zero", "the Steward"),
+        # Generic companion references in prompts (lowercase)
+        (" companion named Vesper", " Companion"),
+        ("AI companion named Vesper", "AI Companion"),
+        ("companion named Vesper", "Companion"),
+        # Variable/function name cleanup for charlotte message
+        ("charlotte_message", "steward_message"),
+        ("MESSAGE_FILE  = ", "MESSAGE_FILE = "),  # normalize spacing
+    ]
+
+    changed = []
+    for py_file in sorted(MUSEUM_ROOT.rglob('*.py')):
+        rel = str(py_file.relative_to(MUSEUM_ROOT))
+        if rel in ('migrate_all_rooms.py', 'gen_workflows.py',
+                   'integrate_rooms.py', 'add_message_triggers.py'):
+            continue
+        if 'integration/validate_room' in rel or 'example-room' in rel:
+            continue
+        try:
+            original = py_file.read_text()
+        except Exception as e:
+            print(f'SKIP {rel}: {e}')
+            continue
+
+        migrated = original
+        for old, new in REPLACEMENTS:
+            migrated = migrated.replace(old, new)
+
+        if migrated != original:
+            py_file.write_text(migrated)
+            changed.append(rel)
+            print(f'AUDITED: {rel}')
+        else:
+            print(f'CLEAN: {rel}')
+
+    print(f'\nAudit done: {len(changed)} files updated')
+    return len(changed)
+
+
     """Move if __name__ == '__main__' to after museum hooks if it comes before them."""
     changed = []
     for py_file in sorted(MUSEUM_ROOT.rglob('*.py')):
@@ -225,4 +293,5 @@ if __name__ == '__main__':
     migrate_python_files()
     migrate_workflows()
     wire_museum_hooks()
+    language_audit()
     fix_guard_ordering()
