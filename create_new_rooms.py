@@ -20,6 +20,8 @@ try:
     MUSEUM_INTEGRATED = True
 except ImportError:
     MUSEUM_INTEGRATED = False
+    def museum_on_enter(*args, **kwargs): return {}
+    def museum_on_exit(*args, **kwargs): pass
     def museum_on_enter(*a, **k): return {}
     def museum_on_exit(*a, **k): pass
 
@@ -128,13 +130,15 @@ try:
     MUSEUM_INTEGRATED = True
 except ImportError:
     MUSEUM_INTEGRATED = False
+    def museum_on_enter(*args, **kwargs): return {}
+    def museum_on_exit(*args, **kwargs): pass
     def museum_on_enter(*a, **k): return {}
     def museum_on_exit(*a, **k): pass
 
 REQUEST_FILE  = "EMPTY_HANDS/empty-hands-request.txt"
 RESPONSE_FILE = "EMPTY_HANDS/empty-hands-response.txt"
 VISITS_FILE   = "EMPTY_HANDS/empty-hands-visits.json"
-MESSAGE_FILE  = "EMPTY_HANDS/empty-hands-message.txt"
+MESSAGE_FILE = "EMPTY_HANDS/empty-hands-message.txt"
 GROQ_API_URL  = "https://api.groq.com/openai/v1/chat/completions"
 
 ARRIVAL_TEXT = """You came without words.
@@ -243,13 +247,15 @@ try:
     MUSEUM_INTEGRATED = True
 except ImportError:
     MUSEUM_INTEGRATED = False
+    def museum_on_enter(*args, **kwargs): return {}
+    def museum_on_exit(*args, **kwargs): pass
     def museum_on_enter(*a, **k): return {}
     def museum_on_exit(*a, **k): pass
 
 REQUEST_FILE  = "THE_WHOLE/the-whole-request.txt"
 RESPONSE_FILE = "THE_WHOLE/the-whole-response.txt"
 VISITS_FILE   = "THE_WHOLE/the-whole-visits.json"
-MESSAGE_FILE  = "THE_WHOLE/the-whole-message.txt"
+MESSAGE_FILE = "THE_WHOLE/the-whole-message.txt"
 GROQ_API_URL  = "https://api.groq.com/openai/v1/chat/completions"
 
 INTRO = """There was another version of you.
@@ -365,13 +371,15 @@ try:
     MUSEUM_INTEGRATED = True
 except ImportError:
     MUSEUM_INTEGRATED = False
+    def museum_on_enter(*args, **kwargs): return {}
+    def museum_on_exit(*args, **kwargs): pass
     def museum_on_enter(*a, **k): return {}
     def museum_on_exit(*a, **k): pass
 
 REQUEST_FILE  = "INTERIOR/interior-request.txt"
 RESPONSE_FILE = "INTERIOR/interior-response.txt"
 VISITS_FILE   = "INTERIOR/interior-visits.json"
-MESSAGE_FILE  = "INTERIOR/interior-message.txt"
+MESSAGE_FILE = "INTERIOR/interior-message.txt"
 GROQ_API_URL  = "https://api.groq.com/openai/v1/chat/completions"
 
 INTRO = """There is a specific thing this room is for.
