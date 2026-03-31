@@ -335,27 +335,38 @@ def language_audit():
 
 
 
-def fix_checkout_depth():
-    """Add fetch-depth: 0 to all workflow checkout steps to prevent shallow-clone push failures."""
+def fix_commit_step():
+    """Fix all workflow commit steps: reliable origin push pattern."""
     wf_dir = MUSEUM_ROOT / '.github' / 'workflows'
     changed = []
+    OLD_PUSH = 'git push https://x-access-token:${' + 'GITHUB_TOKEN' + '}@github.com/${' + '{ github.repository }}.git'
+    OLD_PULL = 'git pull --rebase -X theirs https://x-access-token:${' + 'GITHUB_TOKEN' + '}@github.com/${' + '{ github.repository }}.git'
+    SET_URL  = 'git remote set-url origin https://x-access-token:${' + 'GITHUB_TOKEN' + '}@github.com/${' + '{ github.repository }}.git'
+    NEW_PULL = 'git pull --rebase -X theirs origin main'
+    NEW_PUSH = 'git push origin main'
     for wf_file in sorted(wf_dir.glob('*.yml')):
         original = wf_file.read_text()
-        # Replace bare checkout without fetch-depth
-        # Pattern: uses: actions/checkout@v4  (with no 'with:' block following within 2 lines)
-        fixed = re.sub(
-            r'(      - uses: actions/checkout@v4)(?!
-        with:)',
-            r'\1\n        with:\n          fetch-depth: 0',
-            original
-        )
+        if OLD_PUSH not in original:
+            continue
+        out = []
+        email_done = False
+        for line in original.splitlines():
+            if 'user.email' in line and not email_done:
+                out.append(line)
+                out.append('          ' + SET_URL)
+                email_done = True
+            elif OLD_PULL in line:
+                out.append('          ' + NEW_PULL)
+            elif OLD_PUSH in line:
+                out.append('          ' + NEW_PUSH)
+            else:
+                out.append(line)
+        fixed = '\n'.join(out)
         if fixed != original:
             wf_file.write_text(fixed)
             changed.append(wf_file.name)
-            print(f'DEPTH_FIXED: {wf_file.name}')
-        else:
-            print(f'DEPTH_OK: {wf_file.name}')
-    print(f'\nCheckout depth fix done: {len(changed)} files updated')
+            print(f'FIXED: {wf_file.name}')
+    print(f'\nCommit fix done: {len(changed)} files updated')
     return len(changed)
 
 
@@ -364,4 +375,4 @@ if __name__ == '__main__':
     migrate_workflows()
     wire_museum_hooks()
     language_audit()
-    fix_checkout_depth()
+    fix_commit_step()
